@@ -2,10 +2,28 @@
 
 //==============================================================================
 MainComponent::MainComponent()
+: state (stopped)
 {
-    // Make sure you set the size of the component after
-    // you add any child components.
+    addAndMakeVisible(&openButton);
+    openButton.setButtonText("Open...");
+    openButton.onClick = [this] {openButtonClicked();};
+    
+    addAndMakeVisible(&playButton);
+    openButton.setButtonText("Play");
+    setColour (juce::TextButton::buttonColourId, juce::Colours::green);
+    openButton.onClick = [this] {playButtonClicked();};
+    playButton.setEnabled(false);
+    
+    addAndMakeVisible(&stopButton);
+    openButton.setButtonText("Stop");
+    setColour (juce::TextButton::buttonColourId, juce::Colours::red);
+    openButton.onClick = [this] {stopButtonClicked();};
+    stopButton.setEnabled(false);
+    
+    formatManager.registerBasicFormats();
+    transportSource.addChangeListener(this);
     setSize (800, 600);
+    
 
     // Some platforms require permissions to open input channels so request that here
     if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
